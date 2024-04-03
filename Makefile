@@ -66,7 +66,7 @@ benchmark-python-local:
 test-python:
 	FEAST_USAGE=False \
 	IS_TEST=True \
-	python -m pytest -n 8 sdk/python/tests \
+	python3.9 -m pytest -n 8 sdk/python/tests \
 
 test-python-integration:
 	FEAST_USAGE=False IS_TEST=True python -m pytest -n 8 --integration sdk/python/tests
@@ -367,7 +367,7 @@ kill-trino-locally:
 	cd ${ROOT_DIR}; docker stop trino
 
 install-protoc-dependencies:
-	pip install --ignore-installed protobuf==4.23.4 "grpcio-tools>=1.56.2,<2" mypy-protobuf==3.1.0
+	pip install --ignore-installed protobuf==4.25.3 "grpcio-tools>=1.56.2,<2" mypy-protobuf==3.1.0
 
 install-feast-ci-locally:
 	pip install -e ".[ci]"
