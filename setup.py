@@ -147,7 +147,7 @@ GRPCIO_REQUIRED = [
     "grpcio-health-checking>=1.56.2,<2",
 ]
 
-SINGLESTORE_REQUIRED = ["pymysql", "types-PyMySQL"]
+SINGLESTORE_REQUIRED = ["singlestoredb"]
 
 DUCKDB_REQUIRED = [
     "ibis-framework[duckdb]"

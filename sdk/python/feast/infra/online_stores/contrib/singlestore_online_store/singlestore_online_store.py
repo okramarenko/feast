@@ -3,14 +3,13 @@ from __future__ import absolute_import
 import contextlib
 from collections import defaultdict
 from datetime import datetime
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
+from typing import Any, Callable, Dict, List, Literal, Optional, Sequence, Tuple
 
-import pymysql
+import singlestoredb
 import pytz
 from pydantic import StrictStr
-from pymysql.connections import Connection
-from pymysql.cursors import Cursor
-from pymysql.err import InterfaceError
+from singlestoredb.connection import Cursor, Connection
+from singlestoredb.exceptions import InterfaceError
 
 from feast import Entity, FeatureView, RepoConfig
 from feast.infra.key_encoding_utils import serialize_entity_key
@@ -26,7 +25,7 @@ class SingleStoreOnlineStoreConfig(FeastConfigBaseModel):
     NOTE: The class *must* end with the `OnlineStoreConfig` suffix.
     """
 
-    type = "singlestore"
+    type: Literal["singlestore"] = "singlestore"
 
     host: Optional[StrictStr] = None
     user: Optional[StrictStr] = None
@@ -46,8 +45,8 @@ class SingleStoreOnlineStore(OnlineStore):
     def _init_conn(self, config: RepoConfig) -> Connection:
         online_store_config = config.online_store
         assert isinstance(online_store_config, SingleStoreOnlineStoreConfig)
-
-        return pymysql.connect(
+        print("USING SINGLESTOREDB PYTHON CONNECTOR")
+        return singlestoredb.connect(
             host=online_store_config.host or "127.0.0.1",
             user=online_store_config.user or "test",
             password=online_store_config.password or "test",
