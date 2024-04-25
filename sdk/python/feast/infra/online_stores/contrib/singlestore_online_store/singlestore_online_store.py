@@ -1,14 +1,13 @@
 from __future__ import absolute_import
 
-import contextlib
 from collections import defaultdict
 from datetime import datetime
 from typing import Any, Callable, Dict, List, Literal, Optional, Sequence, Tuple
 
-import singlestoredb
 import pytz
+import singlestoredb
 from pydantic import StrictStr
-from singlestoredb.connection import Cursor, Connection
+from singlestoredb.connection import Connection, Cursor
 from singlestoredb.exceptions import InterfaceError
 
 from feast import Entity, FeatureView, RepoConfig
@@ -111,7 +110,7 @@ class SingleStoreOnlineStore(OnlineStore):
                     event_ts = VALUES(event_ts),
                     created_ts = VALUES(created_ts);
                     """,
-                    current_batch
+                    current_batch,
                 )
                 if progress:
                     progress(len(current_batch))
@@ -136,25 +135,27 @@ class SingleStoreOnlineStore(OnlineStore):
                 )
 
             if not requested_features:
-                entity_key_placeholders = ','.join(['%s' for _ in keys])
+                entity_key_placeholders = ",".join(["%s" for _ in keys])
                 cur.execute(
                     f"""
                     SELECT entity_key, feature_name, value, event_ts FROM {_table_id(project, table)}
                     WHERE entity_key IN ({entity_key_placeholders})
                     ORDER BY event_ts;
                     """,
-                    tuple(keys)
+                    tuple(keys),
                 )
             else:
-                entity_key_placeholders = ','.join(['%s' for _ in keys])
-                requested_features_placeholders = ','.join(['%s' for _ in requested_features])
+                entity_key_placeholders = ",".join(["%s" for _ in keys])
+                requested_features_placeholders = ",".join(
+                    ["%s" for _ in requested_features]
+                )
                 cur.execute(
                     f"""
                     SELECT entity_key, feature_name, value, event_ts FROM {_table_id(project, table)}
                     WHERE entity_key IN ({entity_key_placeholders}) and feature_name IN ({requested_features_placeholders})
                     ORDER BY event_ts;
                     """,
-                    tuple(keys + requested_features)
+                    tuple(keys + requested_features),
                 )
             rows = cur.fetchall() or []
 
