@@ -48,7 +48,7 @@ package-protos:
 	cp -r ${ROOT_DIR}/protos ${ROOT_DIR}/sdk/python/feast/protos
 
 compile-protos-python:
-	python3.9 setup.py build_python_protos --inplace
+	python setup.py build_python_protos --inplace
 
 install-python:
 	python -m piptools sync sdk/python/requirements/py$(PYTHON)-requirements.txt
@@ -66,7 +66,7 @@ benchmark-python-local:
 test-python:
 	FEAST_USAGE=False \
 	IS_TEST=True \
-	python3.9 -m pytest -n 8 sdk/python/tests \
+	python -m pytest -n 8 sdk/python/tests \
 
 test-python-integration:
 	FEAST_USAGE=False IS_TEST=True python -m pytest -n 8 --integration sdk/python/tests
@@ -77,7 +77,7 @@ test-python-integration-local:
 		IS_TEST=True \
 		FEAST_IS_LOCAL_TEST=True \
 		FEAST_LOCAL_ONLINE_CONTAINER=True \
-		python3.9 -m pytest -n 8 --integration \
+		python -m pytest -n 8 --integration \
 			-k "not gcs_registry and \
  				not s3_registry and \
  				not test_lambda_materialization and \
